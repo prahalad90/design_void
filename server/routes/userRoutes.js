@@ -1,33 +1,32 @@
-const express = require("express");
-const bcrypt = require("bcryptjs");
-const User = require("../models/User");
-
+const express = require('express');
+const { createUser, getAllUsers } = require('../models/User');
 const router = express.Router();
+createUser
 
-// Create First User (Register)
-router.post("/register", async (req, res) => {
+router.post('/users', async (req, res) => {
   try {
     const { name, email, password, role } = req.body;
+    
+    if (!name || !email || !password) {
+      return res.status(400).json({ error: 'Name, email, and password are required' });
+    }
 
-    // Check if user already exists
-    let user = await User.findOne({ email });
-    if (user) return res.status(400).json({ message: "User already exists" });
-
-    // Hash password
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    // Create new user
-    user = new User({
-      name,
-      email,
-      password: hashedPassword,
-      role: role || "employee",
-    });
-
-    await user.save();
-    res.status(201).json({ message: "User created successfully", user });
+    const newUser = await createUser(name, email, password, role);
+    res.status(201).json(newUser);
   } catch (error) {
-    res.status(500).json({ message: "Server error", error });
+    console.error('Error creating user:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
+// ✅ Route to Get All Users
+router.get('/users', async (req, res) => {
+  try {
+    const users = await getAllUsers();
+    res.status(200).json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
