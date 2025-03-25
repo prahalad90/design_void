@@ -36,4 +36,5 @@ const createTables = async () => {
     }
 };
 
-createTables();  // Run the function
+
+module.exports = createTables;

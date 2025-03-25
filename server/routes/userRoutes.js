@@ -1,32 +1,64 @@
-const express = require('express');
-const { createUser, getAllUsers } = require('../models/User');
+const express = require("express");
 const router = express.Router();
-createUser
+const bcrypt = require("bcryptjs");
+const { getAllUsers, getUserById, createUser, updateUser, deleteUser } = require("../models/User");
 
-router.post('/users', async (req, res) => {
+// 📌 Get all users
+router.get("/", async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
-    
-    if (!name || !email || !password) {
-      return res.status(400).json({ error: 'Name, email, and password are required' });
-    }
-
-    const newUser = await createUser(name, email, password, role);
-    res.status(201).json(newUser);
-  } catch (error) {
-    console.error('Error creating user:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    const users = await getAllUsers();
+    res.json(users);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// ✅ Route to Get All Users
-router.get('/users', async (req, res) => {
+// 📌 Get user by ID
+router.get("/:id", async (req, res) => {
   try {
-    const users = await getAllUsers();
-    res.status(200).json(users);
-  } catch (error) {
-    console.error('Error fetching users:', error);
-    res.status(500).json({ error: 'Internal Server Error' });
+    const user = await getUserById(req.params.id);
+    if (!user) return res.status(404).json({ error: "User not found" });
+    res.json(user);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// 📌 Create a new user
+router.post("/", async (req, res) => {
+  try {
+    const { name, email, password, role } = req.body;
+
+    // Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const newUser = await createUser(name, email, hashedPassword, role);
+    res.status(201).json(newUser);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// 📌 Update a user
+router.put("/:id", async (req, res) => {
+  try {
+    const { name, email, role } = req.body;
+    const updatedUser = await updateUser(req.params.id, name, email, role);
+    if (!updatedUser) return res.status(404).json({ error: "User not found" });
+    res.json(updatedUser);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// 📌 Delete a user
+router.delete("/:id", async (req, res) => {
+  try {
+    const deletedUser = await deleteUser(req.params.id);
+    if (!deletedUser) return res.status(404).json({ error: "User not found" });
+    res.json({ message: "User deleted successfully", user: deletedUser });
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 

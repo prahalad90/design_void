@@ -1,23 +1,5 @@
-const pool = require('../config/db'); // PostgreSQL connection
+const pool = require('../config/db');
 
-// ✅ Create Users Table (Executed once when the server starts)
-const createUserTable = async () => {
-  const query = `
-    CREATE TABLE IF NOT EXISTS users (
-      id SERIAL PRIMARY KEY,
-      name VARCHAR(255) NOT NULL,
-      email VARCHAR(255) UNIQUE NOT NULL,
-      password VARCHAR(255) NOT NULL,
-      role VARCHAR(50) DEFAULT 'employee' CHECK (role IN ('admin', 'employee')),
-      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    );
-  `;
-  await pool.query(query);
-};
-
-createUserTable().catch(err => console.error('Error creating Users table:', err));
-
-/* ✅ User Model Functions (Only Database Queries) */
 const getAllUsers = async () => {
   const result = await pool.query('SELECT * FROM users');
   return result.rows;
@@ -49,7 +31,7 @@ const deleteUser = async (id) => {
   return result.rows[0];
 };
 
-/* ✅ Export All Functions */
+
 module.exports = {
   getAllUsers,
   getUserById,
