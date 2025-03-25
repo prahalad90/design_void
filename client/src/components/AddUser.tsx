@@ -1,5 +1,7 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 import axios from "axios";
+import DataTable from "react-data-table-component";
+
 
 const AddUserForm = () => {
   const [formData, setFormData] = useState({
@@ -13,18 +15,61 @@ const AddUserForm = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
       const response = await axios.post("http://localhost:5000/api/users", formData);
       alert("User added successfully!");
       console.log("User Created:", response.data);
+      setFormData({
+        name: "",
+        email: "",
+        password: "",
+        role: "employee",
+      });
     } catch (error) {
       console.error("Error adding user:", error.response?.data || error);
       alert("Failed to add user.");
     }
   };
 
+
+  const [users, setUsers] = useState([]);
+
+  // Function to fetch users
+  const fetchUsers = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/users");
+      setUsers(response.data); // Store fetched users in state
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, [handleSubmit]);
+
+  const columns = [
+    {
+      name: "ID",
+      selector: (row: any) => row.id,
+      sortable: true,
+    },
+    {
+      name: "Name",
+      selector: (row: any) => row.name,
+      sortable: true,
+    },
+    {
+      name: "Email",
+      selector: (row: any) => row.email,
+    },
+    {
+      name: "Role",
+      selector: (row: any) => row.role,
+    },
+  ];
   return (
     <div>
       <h2 className="text-2xl">Add New User</h2>
@@ -53,6 +98,17 @@ const AddUserForm = () => {
       </form>
 
       <hr className="my-5" />
+      <div className="p-4">
+      <h2 className="text-2xl mb-4">Users List</h2>
+      <DataTable
+        columns={columns}
+        data={users}
+        pagination
+        highlightOnHover
+        striped
+      />
+    </div>
+
     </div>
   );
 };
