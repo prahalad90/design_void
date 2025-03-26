@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
 
@@ -11,7 +11,11 @@ const AddUserForm = () => {
     role: "employee",
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+};
+
+const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -27,7 +31,7 @@ const AddUserForm = () => {
         password: "",
         role: "employee",
       });
-    } catch (error) {
+    } catch (error:any) {
       console.error("Error adding user:", error.response?.data || error);
       alert("Failed to add user.");
     }
@@ -70,6 +74,24 @@ const AddUserForm = () => {
       selector: (row: any) => row.role,
     },
   ];
+  const customStyles = {
+    rows: {
+      style: {
+        fontSize: '16px', // Adjust text size for table rows
+      },
+    },
+    headCells: {
+      style: {
+        fontSize: '18px', // Adjust text size for table headers
+        fontWeight: 'bold',
+      },
+    },
+    cells: {
+      style: {
+        fontSize: '16px', // Adjust text size for table cells
+      },
+    },
+  };
   return (
     <div>
       <h2 className="text-2xl">Add New User</h2>
@@ -89,7 +111,7 @@ const AddUserForm = () => {
         </div>
         <div className="my-5">
           <label className="text-xl pr-5">Role:</label>
-          <select className='border-2 border-solid border-blue-400 rounded-[5px] p-2 ' name="role" value={formData.role} onChange={handleChange}>
+          <select className='border-2 border-solid border-blue-400 rounded-[5px] p-2 ' name="role" value={formData.role} onChange={handleSelectChange}>
             <option value="employee">Employee</option>
             <option value="admin">Admin</option>
           </select>
@@ -99,15 +121,16 @@ const AddUserForm = () => {
 
       <hr className="my-5" />
       <div className="p-4">
-      <h2 className="text-2xl mb-4">Users List</h2>
-      <DataTable
-        columns={columns}
-        data={users}
-        pagination
-        highlightOnHover
-        striped
-      />
-    </div>
+        <h2 className="text-2xl mb-4">Users List</h2>
+        <DataTable
+          columns={columns}
+          data={users}
+          pagination
+          highlightOnHover
+          striped
+          customStyles={customStyles}
+        />
+      </div>
 
     </div>
   );

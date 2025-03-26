@@ -1,25 +1,23 @@
 const pool = require('../config/db');
 
-// ✅ Add a New Task
-const addTask = async (title, description, assignedTo, dueDate, status = 'pending') => {
+const addTask = async (userid,project,title,description,status,assignedby,duedate) => {
   const query = `
-    INSERT INTO tasks (title, description, assigned_to, due_date, status)
-    VALUES ($1, $2, $3, $4, $5)
+    INSERT INTO tasks (user_id, project, title, description, status, assignedby, duedate)
+    VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;
   `;
-  const values = [title, description, assignedTo, dueDate, status];
+  const values = [userid,project, title, description,status,assignedby, duedate];
   const result = await pool.query(query, values);
   return result.rows[0];
 };
 
-// ✅ Get All Tasks
 const getAllTasks = async () => {
   const query = `SELECT * FROM tasks ORDER BY created_at DESC;`;
   const result = await pool.query(query);
   return result.rows;
 };
 
-// ✅ Get Tasks Assigned to a User
+
 const getTasksByUser = async (userId) => {
   const query = `SELECT * FROM tasks WHERE assigned_to = $1 ORDER BY due_date ASC;`;
   const result = await pool.query([userId]);
@@ -34,7 +32,7 @@ const updateTaskStatus = async (taskId, status) => {
     WHERE id = $2
     RETURNING *;
   `;
-  const result = await pool.query(query, [status, taskId]);
+  const result = await pool.query(query, [taskId, status]);
   return result.rows[0];
 };
 
