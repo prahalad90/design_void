@@ -11,6 +11,12 @@ const getUserById = async (id) => {
   return result.rows[0];
 };
 
+const getUserByEmail = async (email) => {
+  const query = 'SELECT * FROM users WHERE email = $1';
+  const result = await pool.query(query, [email]);
+  return result.rows[0];
+};
+
 const createUser = async (name, email, password, role = 'employee') => {
   const query = `INSERT INTO users (name, email, password, role) VALUES ($1, $2, $3, $4) RETURNING *`;
   const values = [name, email, password, role];
@@ -37,5 +43,6 @@ module.exports = {
   getUserById,
   createUser,
   updateUser,
-  deleteUser
+  deleteUser,
+  getUserByEmail
 };

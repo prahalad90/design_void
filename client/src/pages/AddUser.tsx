@@ -8,7 +8,7 @@ const AddUserForm = () => {
     name: "",
     email: "",
     password: "",
-    role: "employee",
+    role: "employee", 
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -97,21 +97,19 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       <h2 className="text-2xl">Add New User</h2>
       <hr className="my-2" />
       <form onSubmit={handleSubmit}>
-        <div className="my-5">
-          <label className="text-xl pr-5">Name: </label>
-          <input className='border-2 border-solid border-blue-400 rounded-[5px] p-2' type="text" name="name" value={formData.name} onChange={handleChange} required />
-        </div>
-        <div className="my-5">
-          <label className="text-xl pr-5">Email:</label>
-          <input className='border-2 border-solid border-blue-400 rounded-[5px] p-2' type="email" name="email" value={formData.email} onChange={handleChange} required />
-        </div>
-        <div className="my-5">
-          <label className="text-xl pr-5">Password:</label>
-          <input className='border-2 border-solid border-blue-400 rounded-[5px] p-2 ' type="password" name="password" value={formData.password} onChange={handleChange} required />
-        </div>
-        <div className="my-5">
-          <label className="text-xl pr-5">Role:</label>
-          <select className='border-2 border-solid border-blue-400 rounded-[5px] p-2 ' name="role" value={formData.role} onChange={handleSelectChange}>
+        
+        <div className="my-5 grid grid-flow-col grid-rows-4 gap-x-4 gap-y-0">
+          <label className="text-xl pr-5 content-center">Name: </label>
+          <input className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2' type="text" name="name" value={formData.name} onChange={handleChange} required />
+        
+          <label className="text-xl pr-5 content-center">Email:</label>
+          <input className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2' type="email" name="email" value={formData.email} onChange={handleChange} required />
+        
+          <label className="text-xl pr-5 content-center">Password:</label>
+          <input className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2 ' type="password" name="password" value={formData.password} onChange={handleChange} required />
+       
+          <label className="text-xl pr-5 content-center">Role:</label>
+          <select className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2 ' name="role" value={formData.role} onChange={handleSelectChange}>
             <option value="employee">Employee</option>
             <option value="admin">Admin</option>
           </select>

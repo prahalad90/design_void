@@ -9,7 +9,7 @@ function Header({ children }: HeaderProps) {
     const navigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem("auth"); // Clear auth
+        localStorage.removeItem("token"); // Clear auth
         navigate("/login"); // Redirect to login
       };
 

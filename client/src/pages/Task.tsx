@@ -138,7 +138,7 @@ function Task() {
 
     const [myuser, setUser] = useState([])
 
-    const fetchUser = async () => {
+    const fetchAssignby = async () => {
         try {
             const response = await axios.get("http://localhost:5000/api/users/");
             setUser(response.data); // Store fetched users in state
@@ -149,7 +149,7 @@ function Task() {
     };
 
     useEffect(()=>{
-        fetchUser();
+        fetchAssignby();
     },[])
 
 
@@ -161,24 +161,33 @@ function Task() {
                 <div className='w-full'>
                     <form onSubmit={handleSubmit}>
                         <div className='flex flex-wrap gap-2 py-4'>
-                            <input className='border-2 border-solid border-blue-400 rounded-[5px] p-2' type="text" name="userid" value={formData.userid} onChange={handleChange} />
-                            <select name="project" id="" className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(33%-4px)]' value={formData.project} onChange={handleSelectChange}>
-                                {project.map((proj) => (
-                                    <option key={proj.id} value={proj.name}>
-                                    {proj.name}
-                                    </option>
-                                ))}
-                            </select>
+                        <select name="userid" id="" className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(33%-4px)]' value={formData.userid} onChange={handleSelectChange}>
+                            <option  value="">Assign To</option>
+                            {myuser.map((user:any) => (
+                                <option key={user.id} value={user.id}>
+                                {user.name}
+                                </option>
+                            ))}
+                        </select>
+
+                        <select name="project" id="" className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(33%-4px)]' value={formData.project} onChange={handleSelectChange}>
+                            <option value="">Select Project</option>
+                            {project.map((proj:any) => (
+                                <option key={proj.id} value={proj.id}>
+                                {proj.name}
+                                </option>
+                            ))}
+                        </select>
                             
-                            <input className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(67%-4px)]' placeholder='Task Name' type="text" name='title' value={formData.title}
+                            <input className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(33%-4px)]' placeholder='Task Name' type="text" name='title' value={formData.title}
                                 onChange={handleChange} />
                             <input type="text" className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(80%-4px)]' placeholder='Task Detail' name='description' value={formData.description}
                                 onChange={handleChange} />
                             <input type="date" className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(20%-4px)]' placeholder='Due Date' name='duedate' value={formData.duedate}
                                 onChange={handleChange} />
                             <select name="assignedby" id="" className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(33%-4px)]' value={formData.assignedby} onChange={handleSelectChange}>
-                                {myuser.map((user) => (
-                                    <option key={user.id} value={user.name}>
+                                {myuser.map((user:any) => (
+                                    <option key={user.id} value={user.id}>
                                     {user.name}
                                     </option>
                                 ))}
@@ -188,9 +197,10 @@ function Task() {
                     </form>
                 </div>
             </div>
-            <hr className='my-5' />
-            <div className="p-4">
-                <h2 className="text-2xl mb-4">Users List</h2>
+            
+            <div className="mt-5">
+                <h2 className="text-2xl">Task List</h2>
+                <hr className="mb-4"/>
                 <DataTable
                     columns={columns}
                     data={task}

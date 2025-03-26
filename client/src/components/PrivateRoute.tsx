@@ -6,7 +6,7 @@ interface HeaderProps {
 }
 
 const PrivateRoute = ( { children }: HeaderProps ) => {
-  const isAuthenticated = localStorage.getItem("auth");
+  const isAuthenticated = localStorage.getItem("token");
 
   return isAuthenticated ? children : <Navigate to="/login" />;
 };
