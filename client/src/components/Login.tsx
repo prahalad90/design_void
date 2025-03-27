@@ -26,7 +26,7 @@ const Login = () => {
             <div className="border-2 border-solid p-5 rounded-xl text-center">
                 <h2 className="text text-center text-2xl">Login Page</h2>
                 <input type="text" name="email" className="w-100 block my-5 outline-none border-2 border-solid border-blue-400 rounded-[5px] p-2" onChange={(e) => setEmail(e.target.value)}/>
-                <input type="text" name="password" className="w-100 block my-5 outline-none border-2 border-solid border-blue-400 rounded-[5px] p-2 " onChange={(e) => setPassword(e.target.value)}/>
+                <input type="password" name="password" className="w-100 block my-5 outline-none border-2 border-solid border-blue-400 rounded-[5px] p-2 " onChange={(e) => setPassword(e.target.value)}/>
                 <button className="w-50 bg-red-500 p-2 rounded-[5px]" onClick={handleLogin}>Login</button>
             </div>
         </div>

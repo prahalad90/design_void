@@ -1,11 +1,11 @@
 import { Navigate } from "react-router-dom";
 import { ReactNode } from "react";
 
-interface HeaderProps {
+interface Props {
   children: ReactNode;
 }
 
-const PrivateRoute = ( { children }: HeaderProps ) => {
+const PrivateRoute = ( { children }: Props ) => {
   const isAuthenticated = localStorage.getItem("token");
 
   return isAuthenticated ? children : <Navigate to="/login" />;

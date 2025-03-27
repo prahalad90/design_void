@@ -50,6 +50,9 @@ function Header({ children }: HeaderProps) {
                             <Link className="text-xl" to="/">Dashboard</Link>
                         </li>
                         <li className="my-5">
+                            <Link className="text-xl" to="/project">Project</Link>
+                        </li>
+                        <li className="my-5">
                             <Link className="text-xl" to="/task">Task</Link>
                         </li>
                         <li className="my-5">
