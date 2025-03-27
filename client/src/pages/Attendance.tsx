@@ -2,7 +2,10 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 
 export default function Attendance() {
+    
   return (
+
+
     <div className='p-5'>
         <FullCalendar
         plugins={[ dayGridPlugin ]}
