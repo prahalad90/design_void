@@ -6,7 +6,7 @@ const router = express.Router();
 const pool = require('../config/db');
 
 
-const SECRET_KEY = 'your_secret_key';
+const SECRET_KEY = '2025';
 
 // Register User
 router.post('/register', async (req, res) => {
@@ -28,9 +28,10 @@ router.post('/login', async (req, res) => {
           return res.status(401).json({ error: 'Invalid credentials' });
       }
       console.log('success')
-      const token = jwt.sign({ email: user.email, id: user.id }, SECRET_KEY, { expiresIn: '1h' });
+      const token = jwt.sign({ email: user.email, id: user.id, role: user.role }, SECRET_KEY, { expiresIn: '1h' });
       res.json({ token });
-  } catch (err) {
+    } 
+  catch (err) {
       res.status(500).json({ error: 'Login failed' });
   }
 });

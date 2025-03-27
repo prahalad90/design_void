@@ -7,6 +7,7 @@ interface Props {
 
 const PrivateRoute = ( { children }: Props ) => {
   const isAuthenticated = localStorage.getItem("token");
+  console.log(isAuthenticated)
 
   return isAuthenticated ? children : <Navigate to="/login" />;
 };

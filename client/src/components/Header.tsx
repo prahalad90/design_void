@@ -62,7 +62,7 @@ function Header({ children }: HeaderProps) {
                             <Link className="text-xl" to="/user">User</Link>
                         </li>
                         <li className="my-5">
-                            <p className="text-xl" onClick={handleLogout}>Logout</p>
+                            <p className="text-xl cursor-pointer" onClick={handleLogout}>Logout</p>
                         </li>
                         
                     </ul>
@@ -70,7 +70,6 @@ function Header({ children }: HeaderProps) {
                 <div className='h-[calc(100vh-80px)] w-9/12 overflow-y-scroll p-5'>
                 {children}
                 </div>
-                
             </div>
         </>
     )
