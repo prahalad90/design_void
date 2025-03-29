@@ -1,8 +1,18 @@
 const express = require("express");
 const router = express.Router();
+const multer = require("multer");
 const bcrypt = require("bcryptjs");
 const { getAllUsers, getUserById, createUser, updateUser, deleteUser } = require("../models/User");
 
+router.use("/uploads", express.static("uploads"));
+const storage = multer.diskStorage({
+  destination: "uploads/",
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + "-" + file.originalname);
+  },
+});
+
+const upload = multer({ storage });
 
 router.get("/", async (req, res) => {
   try {
@@ -24,14 +34,14 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.post("/", async (req, res) => {
+router.post("/", upload.single("image"),async (req, res) => {
   try {
-    const { name, email, password, role } = req.body;
-
+    const { name, email, password, role} = req.body;
+    const imagePath = req.file ? `/uploads/${req.file.filename}` : null;
     // Hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const newUser = await createUser(name, email, hashedPassword, role);
+    const newUser = await createUser(name, email, hashedPassword, role, imagePath);
     res.status(201).json(newUser);
   } catch (err) {
     res.status(500).json({ error: "Server error" });

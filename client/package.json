@@ -16,6 +16,8 @@
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/react": "^6.1.15",
     "@heroicons/react": "^2.2.0",
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/face_mesh": "^0.4.1633559619",
     "@tailwindcss/vite": "^4.0.15",
     "axios": "^1.8.4",
     "datatables.net-dt": "^2.2.2",

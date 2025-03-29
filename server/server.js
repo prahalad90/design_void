@@ -18,6 +18,7 @@ const userRoutes = require("./routes/userRoutes");
 const taskRoutes = require("./routes/taskRoutes");
 const projectRoutes = require("./routes/projectRoutes");
 const authRoutes = require("./routes/authRoutes")
+const attendanceRoutes = require("./routes/attendanceRoutes")
 const bcrypt = require('bcryptjs');
 const pool = require("./config/db");
 const createTables = require("./config/init")
@@ -33,6 +34,7 @@ app.use("/api/users", userRoutes);
 app.use("/api/task", taskRoutes);
 app.use("/api/project", projectRoutes);
 app.use('/auth', authRoutes);
+
 
 createTables().then(() => {
     console.log('✅ Database initialized successfully.');

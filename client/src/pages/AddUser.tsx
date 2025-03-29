@@ -11,6 +11,8 @@ const AddUserForm = () => {
     role: "employee", 
   });
 
+  const [image, setImage] = useState();
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 };
@@ -19,10 +21,26 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleImageChange = (e:any) => {
+    if (e.target.files.length > 0) {
+      setImage(e.target.files[0]);
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    const newFormData = new FormData();
+    newFormData.append("name", formData.name);
+    newFormData.append("email", formData.email);
+    newFormData.append("password", formData.password);
+    newFormData.append("role", formData.role);
+    if (image) {
+      newFormData.append("image", image);
+    }
     try {
-      const response = await axios.post("http://localhost:5000/api/users", formData);
+      const response = await axios.post("http://localhost:5000/api/users", newFormData, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       alert("User added successfully!");
       console.log("User Created:", response.data);
       setFormData({
@@ -30,6 +48,7 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         email: "",
         password: "",
         role: "employee",
+
       });
     } catch (error:any) {
       console.error("Error adding user:", error.response?.data || error);
@@ -113,6 +132,8 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
             <option value="employee">Employee</option>
             <option value="admin">Admin</option>
           </select>
+          <label htmlFor="image">Image</label>
+          <input name="image" type="file" accept="image/*" onChange={handleImageChange} />
         </div>
         <button className='bg-blue-500 px-5 py-2 b rounded-[5px] cursor-pointer' type="submit">Add User</button>
       </form>
