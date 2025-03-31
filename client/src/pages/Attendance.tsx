@@ -17,8 +17,8 @@ export default function Attendance() {
         events={[
           { title: 'Check In', date: '2025-03-25' },
           { title: 'Instagram', date: '2025-03-15' },
-            { title: 'event 1', date: '2025-04-01' },
-            { title: 'event 2', date: '2025-03-02' },
+          { title: 'event 1', date: '2025-04-01' },
+          { title: 'event 2', date: '2025-03-02' },
         ]}
       />
     </div>

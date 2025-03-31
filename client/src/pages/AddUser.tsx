@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
+import UpdateUser from '../components/Updateuser'
 
 
 const AddUserForm = () => {
@@ -8,20 +9,20 @@ const AddUserForm = () => {
     name: "",
     email: "",
     password: "",
-    role: "employee", 
+    role: "employee",
   });
 
   const [image, setImage] = useState();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
-};
+  };
 
-const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleImageChange = (e:any) => {
+  const handleImageChange = (e: any) => {
     if (e.target.files.length > 0) {
       setImage(e.target.files[0]);
     }
@@ -50,7 +51,7 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
         role: "employee",
 
       });
-    } catch (error:any) {
+    } catch (error: any) {
       console.error("Error adding user:", error.response?.data || error);
       alert("Failed to add user.");
     }
@@ -63,7 +64,7 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get("http://localhost:5000/api/users");
-      setUsers(response.data); // Store fetched users in state
+      setUsers(response.data);
     } catch (error) {
       console.error("Error fetching users:", error);
     }
@@ -73,10 +74,12 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     fetchUsers();
   }, [handleSubmit]);
 
+  const [selectedUser, setSelectedUser] = useState(null)
+
   const columns = [
     {
       name: "ID",
-      selector: (row: any) => row.id,
+      selector: (row: any) => <img src={`http://127.0.0.1:5000${row.image}`} alt="" />,
       sortable: true,
     },
     {
@@ -92,7 +95,15 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       name: "Role",
       selector: (row: any) => row.role,
     },
+    {
+      name: "Update",
+      selector: (row:any) => (
+        <button onClick={() => setSelectedUser(row.id)}>Update</button>
+      ),
+    },
   ];
+
+
   const customStyles = {
     rows: {
       style: {
@@ -111,22 +122,24 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       },
     },
   };
+
+
   return (
     <div>
       <h2 className="text-2xl">Add New User</h2>
       <hr className="my-2" />
       <form onSubmit={handleSubmit}>
-        
+
         <div className="my-5 grid grid-flow-col grid-rows-4 gap-x-4 gap-y-0">
           <label className="text-xl pr-5 content-center">Name: </label>
           <input className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2' type="text" name="name" value={formData.name} onChange={handleChange} required />
-        
+
           <label className="text-xl pr-5 content-center">Email:</label>
           <input className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2' type="email" name="email" value={formData.email} onChange={handleChange} required />
-        
+
           <label className="text-xl pr-5 content-center">Password:</label>
           <input className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2 ' type="password" name="password" value={formData.password} onChange={handleChange} required />
-       
+
           <label className="text-xl pr-5 content-center">Role:</label>
           <select className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2 ' name="role" value={formData.role} onChange={handleSelectChange}>
             <option value="employee">Employee</option>
@@ -150,7 +163,9 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
           customStyles={customStyles}
         />
       </div>
-
+      {selectedUser && (
+        <UpdateUser user={selectedUser} onClose={() => setSelectedUser(null)} />
+      )}
     </div>
   );
 };

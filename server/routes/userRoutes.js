@@ -49,10 +49,13 @@ router.post("/", upload.single("image"),async (req, res) => {
 });
 
 
-router.put("/:id", async (req, res) => {
+router.put("/:id",upload.single("image"), async (req, res) => {
   try {
-    const { name, email, role } = req.body;
-    const updatedUser = await updateUser(req.params.id, name, email, role);
+    const { name, email, role, password } = req.body;
+    const image = req.file ? `/uploads/${req.file.filename}` : null;
+    console.log(name, email, role, password, image)
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const updatedUser = await updateUser(req.params.id, name, email, role, hashedPassword, image);
     if (!updatedUser) return res.status(404).json({ error: "User not found" });
     res.json(updatedUser);
   } catch (err) {

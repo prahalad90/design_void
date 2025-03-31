@@ -20,6 +20,7 @@ const CameraComponent = ({ backendUrl }) => {
       return;
     }
     const formData = new FormData();
+
     formData.append("image", blob, "blink_capture.jpg");
 
     try {

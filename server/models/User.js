@@ -24,9 +24,9 @@ const createUser = async (name, email, password, role = 'employee', image) => {
   return result.rows[0];
 };
 
-const updateUser = async (id, name, email, role) => {
-  const query = `UPDATE users SET name = $1, email = $2, role = $3 WHERE id = $4 RETURNING *`;
-  const values = [name, email, role, id];
+const updateUser = async (id, name, email, role, password, image) => {
+  const query = `UPDATE users SET name = $1, email = $2, role = $3, password = $4, image = $5 WHERE id = $6 RETURNING *`;
+  const values = [name, email, role, password, image, id];
   const result = await pool.query(query, values);
   return result.rows[0];
 };

@@ -33,7 +33,9 @@ app.use(express.json());
 app.use("/api/users", userRoutes);
 app.use("/api/task", taskRoutes);
 app.use("/api/project", projectRoutes);
-app.use('/auth', authRoutes);
+app.use("/auth", authRoutes);
+app.use("/api/attendance",attendanceRoutes);
+app.use('/uploads', express.static('uploads'));
 
 
 createTables().then(() => {
