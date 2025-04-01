@@ -8,6 +8,8 @@ process.on("unhandledRejection", (reason, promise) => {
 
 const express = require("express");
 const cors = require("cors");
+
+
 require("dotenv").config();
 require("./models/User");
 require("./models/Attendance");

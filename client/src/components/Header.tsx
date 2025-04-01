@@ -62,6 +62,10 @@ function Header({ children }: HeaderProps) {
                             <Link className="text-xl" to="/user">User</Link>
                         </li>
                         <li className="my-5">
+                            <Link className="text-xl" to="/invoice">Invoice</Link>
+                        </li>
+                        
+                        <li className="my-5">
                             <p className="text-xl cursor-pointer" onClick={handleLogout}>Logout</p>
                         </li>
                         

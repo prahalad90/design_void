@@ -68,8 +68,8 @@ function Task() {
 
     const columns = [
         {
-            name: "Task",
-            selector: (row: any) => row.user_id,
+            name: "Assign To",
+            selector: (row: any) => row.user_id.name,
             sortable: true,
         },
         {

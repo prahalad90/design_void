@@ -7,11 +7,13 @@ const CameraComponent = ({ backendUrl }) => {
   const streamRef = useRef(null);
   const faceMeshRef = useRef(null);
   const cameraRef = useRef(null);
+
   const [isCameraOn, setIsCameraOn] = useState(false);
 
   const blinkDetectedRef = useRef(false);
   const frameCounterRef = useRef(0);
   const skipFrames = 15;
+
 
   // ✅ Function to send image to backend
   const sendImageToBackend = async (blob) => {
@@ -20,15 +22,16 @@ const CameraComponent = ({ backendUrl }) => {
       return;
     }
     const formData = new FormData();
-
+    const userid = localStorage.getItem('id')
+    
     formData.append("image", blob, "blink_capture.jpg");
-
+    formData.append("id", userid);
     try {
       const response = await fetch(`${backendUrl}`, {
         method: "POST",
         body: formData,
       });
-
+      
       const result = await response.json();
       console.log("Server Response:", result);
     } catch (error) {
