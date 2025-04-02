@@ -7,7 +7,7 @@ import UpdateUser from '../components/Updateuser'
 const AddUserForm = () => {
   const [formData, setFormData] = useState({
     name: "",
-    email: "",
+    email: "", 
     password: "",
     role: "employee",
   });

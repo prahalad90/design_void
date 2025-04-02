@@ -1,7 +1,7 @@
 import { useState,useEffect } from "react";
 import axios from "axios";
 import DataTable from "react-data-table-component";
-import UpdateUser from '../components/Updateuser'
+
 
 const Customer = () => {
     const [formData, setFormData] = useState({
@@ -18,15 +18,10 @@ const Customer = () => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        const newFormData = new FormData();
-        newFormData.append("name", formData.name);
-        newFormData.append("address", formData.address);
-        newFormData.append("pincode", formData.pincode);
-        newFormData.append("mobile", formData.mobile);
-        newFormData.append("email", formData.email);
         try {
-            const response = await axios.post("http://localhost:5000/api/customer", newFormData, {
+            const response = await axios.post("http://127.0.0.1:5000/api/customer", formData, {
             });
+           
             alert("Customer added successfully!");
             console.log("User Created:", response.data);
             setFormData({
@@ -37,31 +32,29 @@ const Customer = () => {
                 email: "",
             });
         } catch (error: any) {
-            console.error("Error adding user:", error.response?.data || error);
-            alert("Failed to add user.");
+            console.error("Error adding customer:", error.response?.data || error);
+            alert("Failed to add customer.");
         }
     };
 
     const [customer, setCustomer] = useState([]);
 
     // Function to fetch users
-    const fetchUsers = async () => {
+    const fetchCustomer = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/api/customers");
+            const response = await axios.get("http://127.0.0.1:5000/api/customer");
             setCustomer(response.data);
         } catch (error) {
-            console.error("Error fetching users:", error);
+            console.log("Error fetching users:", error);
         }
     };
 
     useEffect(() => {
-        fetchUsers();
-    }, [handleSubmit]);
+        fetchCustomer();
+    }, []);
 
-    const [selectedCustomer, setSelectedCustomer] = useState(null)
 
     const columns = [
-
         {
             name: "Name",
             selector: (row: any) => row.name,
@@ -74,9 +67,7 @@ const Customer = () => {
 
         {
             name: "Update",
-            selector: (row: any) => (
-                <button onClick={() => setSelectedCustomer(row.id)}>Update</button>
-            ),
+            selector: () => <button>Update</button>,
         },
     ];
 
@@ -103,7 +94,6 @@ const Customer = () => {
         <>
             <div>
                 <form onSubmit={handleSubmit}>
-
                     <div className="my-5 grid grid-flow-col grid-rows-4 gap-x-4 gap-y-0">
                         <label className="text-xl pr-5 content-center">Name: </label>
                         <input className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2' type="text" name="name" value={formData.name} onChange={handleChange} required />
@@ -127,7 +117,7 @@ const Customer = () => {
 
             <hr className="my-5" />
             <div className="p-4">
-                <h2 className="text-2xl mb-4">Users List</h2>
+                <h2 className="text-2xl mb-4">Customer List</h2>
                 <DataTable
                     columns={columns}
                     data={customer}
@@ -137,10 +127,7 @@ const Customer = () => {
                     customStyles={customStyles}
                 />
             </div>
-            {selectedCustomer && (
-                <UpdateUser user={selectedCustomer} onClose={() => setSelectedCustomer(null)} />
-            )}
-
+            
         </>
     )
 }

@@ -1,12 +1,8 @@
 const pool = require('../config/db');
 
-const addCustomer = async (name, addres, pincode, mobile, email) => {
-    const query = `
-    INSERT INTO customers (name, address, pincode, mobile, email)
-    VALUES ($1, $2, $3, $4, $5)
-    RETURNING *;
-  `;
-    const values = [name, addres, pincode, mobile, email];
+const addCustomer = async (name, address, pincode, mobile, email) => {
+    const query = `INSERT INTO customers (name, address, pincode, mobile, email) VALUES ($1, $2, $3, $4, $5) RETURNING *;`;
+    const values = [name, address, pincode, mobile, email];
     const result = await pool.query(query, values);
     return result.rows[0];
 };
@@ -26,8 +22,8 @@ const updateCustomer = async (id, name, address, pincode, mobile, email) => {
 };
 
 const getAllCustomer = async () => {
-    const query = 'SELECT * FROM customers WHERE ORDER BY date DESC';
-    const result = await pool.query(query, [id]);
+    const query = 'SELECT * FROM customers ORDER BY created_at DESC';
+    const result = await pool.query(query);
     return result.rows;
 };
 
