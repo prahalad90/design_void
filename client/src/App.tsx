@@ -3,6 +3,7 @@ import Header from './components/Header'
 import Dashboard from './pages/Dashboard';
 import Project from './pages/Project'
 import Task from './pages/Task';
+import Customer from './pages/Customer';
 import { BrowserRouter as Router, Route, Routes, } from "react-router-dom";
 import PrivateRoute from './components/PrivateRoute';
 import Login from './components/Login';
@@ -28,6 +29,7 @@ function App() {
                 <Route path="/project" element={<Project />} />
                 <Route path="/user" element={<AddUserForm />} />
                 <Route path="/attendance" element={<Attendance />} />
+                <Route path="/customer" element={<Customer />} />
               </Routes>
             </Header>
           </PrivateRoute>

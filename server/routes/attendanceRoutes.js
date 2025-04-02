@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { getUserById, } = require("../models/User");
-const { getAttendanceByUser } = require("../models/Attendance");
+const { addAttendance, getAttendanceByUser, checkUserAttendanceToday, updateAttendance } = require("../models/Attendance");
 const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
@@ -26,9 +26,6 @@ async function compareImages(uploadedBuffer, storedImageBuffer) {
             .raw()
             .toBuffer({ resolveWithObject: true });
 
-        console.log("Uploaded Image Size:", uploadedResized.data.length);
-        console.log("Stored Image Size:", storedResized.data.length);
-
         if (
             uploadedResized.info.width !== storedResized.info.width ||
             uploadedResized.info.height !== storedResized.info.height
@@ -51,7 +48,7 @@ async function compareImages(uploadedBuffer, storedImageBuffer) {
             }
         ).mssim;
 
-        return ssimValue > 0.85;
+        return ssimValue > 0.35;
 
     } catch (error) {
         console.error("Error comparing images:", error);
@@ -73,7 +70,7 @@ router.post("/", upload.single("image"), async (req, res) => {
         }
 
         let storedImageBuffer;
-        
+
         if (Buffer.isBuffer(result.image)) {
             storedImageBuffer = result.image;
         } else {
@@ -86,10 +83,30 @@ router.post("/", upload.single("image"), async (req, res) => {
 
         const isMatch = await compareImages(req.file.buffer, storedImageBuffer);
         if (isMatch) {
-            const checkInTime = new Date();
-            await addAttendance(id, checkInTime);
+            console.log('Face match')
+            const isPunch = await checkUserAttendanceToday(id);
+            console.log(isPunch)
+            if (isPunch.status == "Punch Out") {
+                return res.status(200).json({ message: "You have already marked your attendance." });
+            } else if (isPunch.status == "Punch In") {
+                const punchOut = await updateAttendance(id);
+                if (!punchOut || punchOut.length === 0) {
+                    return res.status(404).json({ message: "No attendance records found" });
+                }
+                else{
+                    console.log('updated')
+                    return res.json({ message: "Image matches user profile, attendance updated", success: true });
+                }
+            } else{
+                const attdata = await addAttendance(id);
+                if (!attdata || attdata.length === 0) {
+                    return res.status(404).json({ message: "No attendance records found" });
+                }
+                else {
+                    return res.json({ message: "Image matches user profile, attendance added", success: true });
+                }
+            }
 
-            return res.json({ message: "Image matches user profile, attendance added", success: true });
         } else {
             return res.json({ message: "Image does not match", success: false });
         }
@@ -104,8 +121,7 @@ router.post("/", upload.single("image"), async (req, res) => {
 router.get('/', async (req, res) => {
     const id = req.query.id;
     try {
-        const attdata = await addAttendance(id);
-
+        const attdata = await getAttendanceByUser(id);
         if (!attdata || attdata.length === 0) {
             return res.status(404).json({ message: "No attendance records found" });
         }

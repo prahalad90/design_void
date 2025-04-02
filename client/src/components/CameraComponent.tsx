@@ -33,7 +33,7 @@ const CameraComponent = ({ backendUrl }) => {
       });
       
       const result = await response.json();
-      console.log("Server Response:", result);
+      window.alert(result.message);
     } catch (error) {
       console.error("Error uploading image:", error);
     }
@@ -162,7 +162,7 @@ const CameraComponent = ({ backendUrl }) => {
   return (
     <div>
       <button className="rounded-[5px] bg-blue-300 px-5 py-2" onClick={isCameraOn ? stopCamera : startCamera}>
-        {isCameraOn ? "Turn Off Camera" : "Open Camera"}
+        {isCameraOn ? "Turn Off Camera" : "Punch In"}
       </button>
       <div id="camera">
         <video
