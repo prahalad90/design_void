@@ -33,7 +33,6 @@ const deleteCustomer = async (id) => {
     return result.rows[0];
   };
 
-
 module.exports = {
     getCustomerById,
     addCustomer,

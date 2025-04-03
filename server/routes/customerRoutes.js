@@ -4,9 +4,8 @@ const { getAllCustomer, addCustomer, getCustomerById, updateCustomer, deleteCust
 
 router.get("/", async (req, res) => {
   try {
-    const customer = await getAllCustomer();
-    console.log('no data')
-    res.json(customer);
+    const customerdata = await getAllCustomer();
+    res.json(customerdata);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }
@@ -15,9 +14,9 @@ router.get("/", async (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    const customer = await getCustomerById(req.params.id);
-    if (!customer) return res.status(404).json({ error: "Customer not found" });
-    res.json(customer);
+    const customeriddata = await getCustomerById(req.params.id);
+    if (!customeriddata) return res.status(404).json({ error: "Customer not found" });
+    res.json(customeriddata);
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }

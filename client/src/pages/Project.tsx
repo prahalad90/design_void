@@ -15,6 +15,9 @@ const Project = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
 };
 
+const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -49,10 +52,27 @@ const Project = () => {
     fetchProject();
   }, [handleSubmit]);
 
+
+  const [customer, setCustomer] = useState([])
+
+  const fetchCustomer = async () => {
+    try {
+      const response = await axios.get("http://localhost:5000/api/customer");
+      setCustomer(response.data); // Store fetched users in state
+    } catch (error) {
+      console.error("Error fetching users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchCustomer();
+  }, []);
+
+
   const columns = [
     {
       name: "ID",
-      selector: (row: any) => row.name,
+      selector: (row: any) => row.customer_id,
       sortable: true,
     },
     {
@@ -72,12 +92,12 @@ const Project = () => {
   const customStyles = {
     rows: {
       style: {
-        fontSize: '16px', // Adjust text size for table rows
+        fontSize: '16px',
       },
     },
     headCells: {
       style: {
-        fontSize: '18px', // Adjust text size for table headers
+        fontSize: '18px',
         fontWeight: 'bold',
       },
     },
@@ -95,8 +115,14 @@ const Project = () => {
         
         <div className="my-2 grid grid-flow-col grid-rows-4 gap-x-4 gap-y-0">
           <label className="text-xl pr-5 content-center">Name: </label>
-          <input className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2' type="text" name="name" value={formData.name} onChange={handleChange} required />
-        
+          <select name="name" id="name" className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(33%-4px)]' value={formData.name} onChange={handleSelectChange}>
+                                <option value="">Select Project</option>
+                                {customer.map((cust: any) => (
+                                    <option key={cust.id} value={cust.id}>
+                                        {cust.name}
+                                    </option>
+                                ))}
+                            </select>
           <label className="text-xl pr-5 content-center">Description:</label>
           <input className='border-2 outline-none border-solid border-blue-400 rounded-[5px] p-2' type="text" name="description" value={formData.description} onChange={handleChange} required />
         

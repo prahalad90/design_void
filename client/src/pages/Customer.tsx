@@ -16,10 +16,12 @@ const Customer = () => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
+    console.log(formData)
+
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await axios.post("http://127.0.0.1:5000/api/customer", formData, {
+            const response = await axios.post("http://localhost:5000/api/customer", formData, {
             });
            
             alert("Customer added successfully!");
@@ -42,7 +44,7 @@ const Customer = () => {
     // Function to fetch users
     const fetchCustomer = async () => {
         try {
-            const response = await axios.get("http://127.0.0.1:5000/api/customer");
+            const response = await axios.get("http://localhost:5000/api/customer");
             setCustomer(response.data);
         } catch (error) {
             console.log("Error fetching users:", error);

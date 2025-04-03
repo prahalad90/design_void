@@ -24,6 +24,7 @@ router.get("/:id", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
+    console.log(req.body)
     try {
         const { name, description, status, duedate } = req.body
         const newProject = await addProject(name, description, status, duedate);
