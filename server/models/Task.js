@@ -1,6 +1,6 @@
 const pool = require('../config/db');
 
-const addTask = async (userid,project,title,description,status,assignedby,duedate) => {
+const addTask = async (userid,project,title,description,status='Pending',assignedby=1,duedate) => {
   const query = `
     INSERT INTO tasks (user_id, project, title, description, status, assignedby, duedate)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
@@ -12,7 +12,7 @@ const addTask = async (userid,project,title,description,status,assignedby,duedat
 };
 
 const getAllTasks = async () => {
-  const query = `SELECT * FROM tasks ORDER BY created_at DESC;`;
+  const query = `SELECT * FROM tasks JOIN users ON tasks.user_id=users.id ORDER BY tasks.created_at DESC;`;
   const result = await pool.query(query);
   return result.rows;
 };

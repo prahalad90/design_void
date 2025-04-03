@@ -1,7 +1,7 @@
 const pool = require('../config/db');
 
 const getAllProjects = async () => {
-    const result = await pool.query('SELECT * FROM projects');
+    const result = await pool.query('SELECT * FROM projects JOIN customers ON projects.customer_id = customers.id');
     return result.rows;
   };
 

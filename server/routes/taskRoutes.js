@@ -24,10 +24,9 @@ router.get("/:id", async (req, res) => {
 
 router.post("/", async (req, res) => {
   try {
-    const { userid, project, title, description, status, assignedby, duedate } = req.body;
-    console.log(userid, project, title, description, status, assignedby, duedate)
-
-    const newTask = await addTask(userid, project, title, description, status, assignedby, duedate);
+    const { userid, project, title, description,duedate } = req.body;
+    
+    const newTask = await addTask(userid, project, title, description,duedate);
     res.status(201).json(newTask);
   } catch (err) {
     console.error("Error adding task:", err);

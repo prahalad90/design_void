@@ -23,8 +23,7 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => { 
     try{
         const { name, particular, amount } = req.body;
-        console.log(name, particular, amount)
-        const date = new Date().toLocaleTimeString()
+        const date = new Date().toLocaleDateString()
         const newInvoice = addInvoice(name, amount, date, particular);
         res.status(201).json(newInvoice);
     }

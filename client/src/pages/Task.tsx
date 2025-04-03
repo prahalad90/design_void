@@ -54,7 +54,7 @@ function Task() {
     // Function to fetch users
     const fetchTask = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/api/task/");
+            const response = await axios.get("http://localhost:5000/api/task");
             setTask(response.data); // Store fetched users in state
             console.log(response.data)
         } catch (error) {
@@ -69,7 +69,7 @@ function Task() {
     const columns = [
         {
             name: "Assign To",
-            selector: (row: any) => row.user_id.name,
+            selector: (row: any) => row.name,
             sortable: true,
         },
         {
@@ -122,7 +122,7 @@ function Task() {
 
     const fetchProject = async () => {
         try {
-            const response = await axios.get("http://localhost:5000/api/project/");
+            const response = await axios.get("http://localhost:5000/api/project");
             setProject(response.data); // Store fetched users in state
             console.log(response.data)
         } catch (error) {
@@ -172,7 +172,7 @@ function Task() {
                             <select name="project" id="" className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(33%-4px)]' value={formData.project} onChange={handleSelectChange}>
                                 <option value="">Select Project</option>
                                 {project.map((proj: any) => (
-                                    <option key={proj.id} value={proj.name}>
+                                    <option key={proj.id} value={proj.id}>
                                         {proj.name}
                                     </option>
                                 ))}

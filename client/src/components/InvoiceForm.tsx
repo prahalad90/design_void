@@ -17,10 +17,8 @@ const InvoiceForm = ({ setShowForm }) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        console.log(formData)
-
         try {
-            const response = await axios.post("http://localhost:5000/api/invoice", FormData, {
+            await axios.post("http://localhost:5000/api/invoice", formData, {
             });
             alert("Invoice Saved successfully!");
 
@@ -61,9 +59,9 @@ const InvoiceForm = ({ setShowForm }) => {
                 <form className="w-[50%] lg:p-[50px] p-5 bg-blue-500 flex flex-col gap-4 relative" onSubmit={handleSubmit} >
                     <button onClick={() => setShowForm(false)} className="absolute right-[10px] top-[10px] bg-white rounded-[100%] px-2 py-1 text-2xl">X</button> {/* Close Button */}
                     <select className="border rounded-[5px] p-3" name="name" id="" value={formData.name} onChange={handleSelectChange}>
-                        <option value="">Select Customer</option>
+                        <option className="border rounded-[5px] p-3" value="">Select Customer</option>
                         {customer.map((cust: any) => (
-                            <option key={cust.id} value={cust.id}>
+                            <option className="border rounded-[5px] p-3" key={cust.id} value={cust.id}>
                                 {cust.name}
                             </option>
                         ))}
