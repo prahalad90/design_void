@@ -1,12 +1,13 @@
 const pool = require('../config/db');
 
-const addTask = async (userid,project,title,description,status='Pending',assignedby=1,duedate) => {
+const addTask = async (userid,project,title,description,duedate,status='Pending',assignedby) => {
   const query = `
     INSERT INTO tasks (user_id, project, title, description, status, assignedby, duedate)
     VALUES ($1, $2, $3, $4, $5, $6, $7)
     RETURNING *;
   `;
-  const values = [userid,project, title, description,status,assignedby, duedate];
+  const newdate = new Date(duedate);
+  const values = [userid,project, title, description,status,assignedby, newdate];
   const result = await pool.query(query, values);
   return result.rows[0];
 };

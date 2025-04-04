@@ -72,11 +72,16 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
   const columns = [
     {
       name: "ID",
-      selector: (row: any) => row.customer_id,
+      selector: (row: any) => row.id,
       sortable: true,
     },
     {
-      name: "Name",
+      name: "Customer",
+      selector: (row: any) => row.name,
+      sortable: true,
+    },
+    {
+      name: "Project Name",
       selector: (row: any) => row.description,
       sortable: true,
     },
@@ -85,8 +90,8 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       selector: (row: any) => row.status,
     },
     {
-      name: "Role",
-      selector: (row: any) => row.duedate,
+      name: "Due Date",
+      selector: (row: any) => row.duedate.split("T")[0],
     },
   ];
   const customStyles = {
@@ -133,7 +138,7 @@ const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
       </form>
       <hr className="my-5" />
       <div className="p-4">
-        <h2 className="text-2xl mb-4">Users List</h2>
+        <h2 className="text-2xl mb-4">Project List</h2>
         <DataTable
           columns={columns}
           data={project}

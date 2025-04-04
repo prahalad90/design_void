@@ -31,7 +31,7 @@ function Task() {
                 body: JSON.stringify({
                     ...formData,
                     status: "Pending",
-                    assignedby: 1,
+                    assignedby: '1',
                 }),
             });
             console.log(formData);
@@ -88,7 +88,7 @@ function Task() {
         },
         {
             name: "Assigned By",
-            selector: (row: any) => row.assignedby,
+            selector: (row: any) => 'admin',
         },
         {
             name: "Due Date",
@@ -172,7 +172,7 @@ function Task() {
                             <select name="project" id="" className='border-2 border-solid border-blue-400 rounded-[5px] p-2 w-[calc(33%-4px)]' value={formData.project} onChange={handleSelectChange}>
                                 <option value="">Select Project</option>
                                 {project.map((proj: any) => (
-                                    <option key={proj.id} value={proj.id}>
+                                    <option key={proj.id} value={proj.name}>
                                         {proj.name}
                                     </option>
                                 ))}
