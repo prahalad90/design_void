@@ -56,20 +56,13 @@ const createTables = async () => {
 
         CREATE TABLE IF NOT EXISTS invoices (
             id SERIAL PRIMARY KEY,
+            invoice_number INTEGER NOT NULL,
             customer_id INTEGER REFERENCES customers(id) ON DELETE CASCADE,
-            particular VARCHAR(255) NOT NULL,
-            date DATE DEFAULT CURRENT_DATE,
-            amount INTEGER,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-
-        CREATE TABLE IF NOT EXISTS invoiceitems (
-            id SERIAL PRIMARY KEY,
-            invoice INTEGER REFERENCES invoices(id) ON DELETE CASCADE,
             description VARCHAR(255) NOT NULL,
+            item VARCHAR(255) NOT NULL,
             quantity INTEGER,
             price INTEGER,
-            total INTEGER,
+            total INTEGER GENERATED ALWAYS AS (quantity * price) STORED,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
 `

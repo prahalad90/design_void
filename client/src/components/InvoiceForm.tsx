@@ -2,51 +2,75 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 
 const InvoiceForm = ({ setShowForm }) => {
-    
+    // State for customer and invoice details
+    const [formData, setFormData] = useState({
+        name: "",  // Customer ID
+        particular: "",
+    });
+
+    // State for line items
     const [lineItems, setLineItems] = useState([{ description: "", quantity: "", price: "" }]);
 
-    const [formData, setFormData] = useState({
-        name: "",
-        amount: 0,
-        particular: "",
-    })
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // State for customer list
+    const [customers, setCustomers] = useState([]);
+
+    // Fetch customers on component mount
+    useEffect(() => {
+        const fetchCustomers = async () => {
+            try {
+                const response = await axios.get("http://localhost:5000/api/customer");
+                setCustomers(response.data);
+            } catch (error) {
+                console.error("Error fetching customers:", error);
+            }
+        };
+        fetchCustomers();
+    }, []);
+
+    // Handle input change for customer details
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-        setFormData({ ...formData, [e.target.name]: e.target.value });
+    // Handle line item input change
+    const handleLineItemChange = (index: number, e: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = e.target;
+        setLineItems((prevItems) => {
+            const updatedItems = [...prevItems];
+            updatedItems[index] = { ...updatedItems[index], [name]: value };
+            return updatedItems;
+        });
     };
 
-    
-
-    const handleLineItemChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = event.target;
-        const updatedItems = [...lineItems];
-        updatedItems[index][name] = value;
-        setLineItems(updatedItems);
-    };
-
+    // Add a new line item
     const addNewLineItem = () => {
         setLineItems([...lineItems, { description: "", quantity: "", price: "" }]);
     };
+
+    // Remove a line item
     const removeLineItem = (index: number) => {
-        setLineItems(lineItems.filter((_, i) => i !== index));
+        setLineItems((prevItems) => prevItems.filter((_, i) => i !== index));
     };
 
+    // Handle form submission
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
+        const invoiceData = {
+            customer: {
+                id: formData.name,
+                particular: formData.particular
+            },
+            items: lineItems
+        };
+
         try {
-            await axios.post("http://localhost:5000/api/invoice", formData, {
-            });
+            await axios.post("http://localhost:5000/api/invoice", invoiceData);
             alert("Invoice Saved successfully!");
 
-            setFormData({
-                name: "",
-                amount: 0,
-                particular: "",
-
-            });
+            // Reset form
+            setFormData({ name: "", particular: "" });
+            setLineItems([{ description: "", quantity: "", price: "" }]);
             setShowForm(false);
         } catch (error: any) {
             console.error("Error adding invoice:", error.response?.data || error);
@@ -54,61 +78,45 @@ const InvoiceForm = ({ setShowForm }) => {
         }
     };
 
-
-    const [customer, setCustomer] = useState([])
-
-    const fetchCustomer = async () => {
-        try {
-            const response = await axios.get("http://localhost:5000/api/customer");
-            setCustomer(response.data); // Store fetched users in state
-        } catch (error) {
-            console.error("Error fetching users:", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchCustomer();
-    }, []);
-
-    
-
-
     return (
-        <>
-            <div className="fixed flex justify-center items-center h-screen w-full top-0 left-0 z-100">
+        <div className="fixed flex justify-center items-center h-screen w-full top-0 left-0 z-100">
+            <form className="w-[50%] lg:p-[50px] p-5 bg-blue-200 flex flex-col gap-4 relative" onSubmit={handleSubmit}>
+                {/* Close Button */}
+                <button onClick={() => setShowForm(false)} type="button" className="absolute right-[10px] top-[10px] bg-white rounded-full px-2 py-1 text-2xl">X</button>
+                
+                {/* Customer Details */}
+                <h3 className="text-xl">Customer Details</h3>
+                <hr />
+                <select className="border outline-none rounded-[5px] p-3" name="name" value={formData.name} onChange={handleChange}>
+                    <option value="">Select Customer</option>
+                    {customers.map((cust: any) => (
+                        <option key={cust.id} value={cust.id}>{cust.name}</option>
+                    ))}
+                </select>
+                <input className="border outline-none rounded-[5px] p-3" type="text" placeholder="Particular" name="particular" value={formData.particular} onChange={handleChange} />
+                
+                {/* Item Details */}
+                <div className="flex justify-between">
+                    <h3 className="text-xl">Item Details</h3>
+                    <button type="button" onClick={addNewLineItem} className="bg-green-500 text-white px-3 py-1 rounded">+ Add Item</button>
+                </div>
+                <hr />
 
-                <form className="w-[50%] lg:p-[50px] p-5 bg-blue-200 flex flex-col gap-4 relative" onSubmit={handleSubmit} >
-                    <button onClick={() => setShowForm(false)} className="absolute right-[10px] top-[10px] bg-white rounded-[100%] px-2 py-1 text-2xl">X</button> {/* Close Button */}
-                    <h3 className="text-xl">Customer Details</h3>
-                    <hr />
-                    <select className="border outline-none rounded-[5px] p-3" name="name" id="" value={formData.name} onChange={handleSelectChange}>
-                        <option className="border outline-none rounded-[5px] p-3" value="">Select Customer</option>
-                        {customer.map((cust: any) => (
-                            <option className="border outline-none rounded-[5px] p-3" key={cust.id} value={cust.id}>
-                                {cust.name}
-                            </option>
-                        ))}
-                    </select>
-                    <input className="border outline-none rounded-[5px] p-3" type="text" placeholder="Particular" onChange={handleChange} name="particular" value={formData.particular} />
-                    <div className="flex justify-between">
-                    <h3 className="text-xl">Item Details</h3> 
-                    <button type="button" onClick={addNewLineItem}>+ Add Item</button></div>
-
-
-                    <hr />
-                    {lineItems.map((lineItem, index) => (
-                    <div key={index} className="flex justify-between">
-                        <input className="border outline-none w-100 rounded-[5px] p-3" type="text" placeholder="Item" name="description" value={lineItem.description} onChange={(e) => handleLineItemChange(index, e)} />
-                        <input className="border outline-none w-20 rounded-[5px] p-3" type="text" placeholder="Quantity" name="quantity" value={lineItem.quantity} onChange={(e) => handleLineItemChange(index, e)} />
-                        <input className="border outline-none w-40 rounded-[5px] p-3" type="text" placeholder="Price" name="price" value={lineItem.price} onChange={(e) => handleLineItemChange(index, e)} />
-                        <button type="button" onClick={() => removeLineItem(index)}>Remove</button>
+                {/* Line Items */}
+                {lineItems.map((lineItem, index) => (
+                    <div key={index} className="flex gap-2 mb-2">
+                        <input className="border outline-none flex-1 p-2 rounded" type="text" placeholder="Item" name="description" value={lineItem.description} onChange={(e) => handleLineItemChange(index, e)} />
+                        <input className="border outline-none w-20 p-2 rounded" type="number" placeholder="Qty" name="quantity" value={lineItem.quantity} onChange={(e) => handleLineItemChange(index, e)} />
+                        <input className="border outline-none w-24 p-2 rounded" type="number" placeholder="Price" name="price" value={lineItem.price} onChange={(e) => handleLineItemChange(index, e)} />
+                        <button type="button" onClick={() => removeLineItem(index)} className="bg-red-500 text-white px-3 py-1 rounded">Remove</button>
                     </div>
                 ))}
-                    <button className="border outline-none bg-blue-900 w-50 rounded-[5px] p-3">Save Invoice</button>
-                </form>
-            </div>
-        </>
-    )
-}
+
+                {/* Save Invoice Button */}
+                <button type="submit" className="border outline-none bg-blue-900 text-white rounded-[5px] p-3 mt-3">Save Invoice</button>
+            </form>
+        </div>
+    );
+};
 
 export default InvoiceForm;
