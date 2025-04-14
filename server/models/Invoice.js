@@ -13,9 +13,14 @@ const getInvoiceById = async (id) => {
     return result.rows[0];
 }
 
-const addInvoice = async (name, amount, date, particular) =>{
-    const query = `INSERT INTO invoices (customer_id, particular, date, amount) VALUES ($1, $2, $3, $4) RETURNING *;`;
-    const value = [name, particular, date, amount]
+const getLastInvoiceNumber = async () => {
+    const result = await pool.query("SELECT id FROM invoices ORDER BY id DESC LIMIT 1");
+    return result.rows[0]?.id || 0;
+  };
+
+const addInvoice = async (invoice, customer, particular, date, item, quantity, price ) =>{
+    const query = `INSERT INTO invoices (invoice_number, customer_id, particular, date, item, quantity, price) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *;`;
+    const value = [invoice, customer, particular, date, item,quantity,price]
     console.log(value)
     const result = await pool.query(query, value);
     return result.rows[0];
@@ -33,4 +38,5 @@ module.exports = {
     getInvoiceById,
     getInvoiceByCustomer,
     addInvoice,
+    getLastInvoiceNumber,
 };

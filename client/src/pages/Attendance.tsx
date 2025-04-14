@@ -8,10 +8,11 @@ export default function Attendance() {
   const [attData, setAttData] = useState([]);
 
   const fetchAttendance = async () => {
+    const userid = localStorage.getItem('id')
     try {
-      const response = await axios.get("http://127.0.0.1:5000/api/attendance?id=1");
+      const response = await axios.get(`http://127.0.0.1:5000/api/attendance?id=${userid}`);
       const attData = response.data;
-      
+      console.log(attData)
       setAttData(attData);
 
     } catch (error) {

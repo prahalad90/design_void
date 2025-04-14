@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { getAllInvoice, getInvoiceByCustomer, getInvoiceById, addInvoice} = require("../models/Invoice");
+const { getAllInvoice,getLastInvoiceNumber, addInvoice} = require("../models/Invoice");
+const pool = require('../config/db');
+
 
 router.get("/", async (req, res) => {
   try {
@@ -20,13 +22,22 @@ router.get("/", async (req, res) => {
     }
   });
 
+
 router.post("/", async (req, res) => { 
-  console.log(req.body)
     try{
-        const { name, particular, amount } = req.body;
+        const { name, particular, items } = req.body;
         const date = new Date().toLocaleDateString()
-        const newInvoice = addInvoice(name, amount, date, particular);
-        res.status(201).json(newInvoice);
+        console.log(date)
+        const lastInvoiceNumber = await getLastInvoiceNumber();
+        console.log(lastInvoiceNumber)
+        const newInvoiceNumber = lastInvoiceNumber + 1;
+        
+        for (let i = 0; i < items.length; i++) {
+          const { description, quantity, price } = items[i];
+          await addInvoice(newInvoiceNumber, name, particular, date, description, quantity, price);
+        }
+        console.log('saved')
+        res.status(201).json({ message: "Invoice created", invoice: newInvoiceNumber });
     }
     catch (err) {
         res.status(500).json({ error: "Server error" });

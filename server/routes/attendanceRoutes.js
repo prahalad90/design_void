@@ -125,6 +125,7 @@ router.get('/', async (req, res) => {
         if (!attdata || attdata.length === 0) {
             return res.status(404).json({ message: "No attendance records found" });
         }
+        console.log(attdata)
         res.json(attdata);
     } catch (error) {
         console.error("Error fetching attendance data:", error);

@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getAllTasks, addTask, getTasksByUser, updateTaskStatus, deleteTask } = require("../models/Task");
+const { getAllTasks, addTask, getTasksByUser, getTasksByProject, updateTaskStatus, deleteTask } = require("../models/Task");
 
 router.get("/", async (req, res) => {
   try {
@@ -14,6 +14,18 @@ router.get("/", async (req, res) => {
 router.get("/:id", async (req, res) => {
   try {
     const task = await getTasksByUser(req.params.id);
+    if (!task) return res.status(404).json({ error: "Task not found" });
+    console.log(task)
+    res.json(task);
+  } catch (err) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+router.get("/project/:id", async (req, res) => {
+  try {
+
+    const task = await getTasksByProject(req.params.id);
     if (!task) return res.status(404).json({ error: "Task not found" });
     res.json(task);
   } catch (err) {

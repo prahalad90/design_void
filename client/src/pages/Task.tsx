@@ -1,9 +1,12 @@
 import DataTable from "react-data-table-component";
+import { useNavigate } from 'react-router-dom';
 import axios from "axios";
 import { useState, useEffect } from "react";
+import Calendar from "./Calender";
 
 function Task() {
 
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         userid: "",
         project: "",
@@ -74,7 +77,11 @@ function Task() {
         },
         {
             name: "Project",
-            selector: (row: any) => row.project,
+            selector: (row: any) => (
+                <button onClick={() => navigate(`/calendar/${row.project}`)}>
+                  {row.project}
+                </button>
+              ),    
             sortable: true,
         },
         {
@@ -193,6 +200,7 @@ function Task() {
             <div className="mt-5">
                 <h2 className="text-2xl">Task List</h2>
                 <hr className="mb-4" />
+                                
                 <DataTable
                     columns={columns}
                     data={task}

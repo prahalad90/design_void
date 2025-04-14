@@ -7,7 +7,6 @@ const InvoiceForm = ({ setShowForm }) => {
 
     const [formData, setFormData] = useState({
         name: "",
-        amount: 0,
         particular: "",
     })
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -18,7 +17,6 @@ const InvoiceForm = ({ setShowForm }) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
 
-    
 
     const handleLineItemChange = (index: number, event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -36,24 +34,36 @@ const InvoiceForm = ({ setShowForm }) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+    
+        const preparedItems = lineItems.map((item) => ({
+            description: item.description,
+            quantity: Number(item.quantity),
+            price: Number(item.price),
+        }));
+    
+        const payload = {
+            name: formData.name,
+            particular: formData.particular,
+            items: preparedItems,
+        };
+    
+        console.log(payload)
         try {
-            await axios.post("http://localhost:5000/api/invoice", formData, {
-            });
+            await axios.post("http://localhost:5000/api/invoice", payload);
             alert("Invoice Saved successfully!");
-
+    
             setFormData({
                 name: "",
-                amount: 0,
                 particular: "",
 
             });
+            setLineItems([{ description: "", quantity: "", price: "" }]);
             setShowForm(false);
         } catch (error: any) {
             console.error("Error adding invoice:", error.response?.data || error);
             alert("Failed to add invoice.");
         }
     };
-
 
     const [customer, setCustomer] = useState([])
 
@@ -101,6 +111,7 @@ const InvoiceForm = ({ setShowForm }) => {
                         <input className="border outline-none w-100 rounded-[5px] p-3" type="text" placeholder="Item" name="description" value={lineItem.description} onChange={(e) => handleLineItemChange(index, e)} />
                         <input className="border outline-none w-20 rounded-[5px] p-3" type="text" placeholder="Quantity" name="quantity" value={lineItem.quantity} onChange={(e) => handleLineItemChange(index, e)} />
                         <input className="border outline-none w-40 rounded-[5px] p-3" type="text" placeholder="Price" name="price" value={lineItem.price} onChange={(e) => handleLineItemChange(index, e)} />
+                        <input className="border outline-none w-40 rounded-[5px] p-3" type="text" placeholder="Total" name="total" value={parseFloat(lineItem.quantity) * parseFloat(lineItem.price)} onChange={(e) => handleLineItemChange(index, e)} />
                         <button type="button" onClick={() => removeLineItem(index)}>Remove</button>
                     </div>
                 ))}

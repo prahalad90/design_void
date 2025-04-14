@@ -20,8 +20,15 @@ const getAllTasks = async () => {
 
 
 const getTasksByUser = async (userId) => {
-  const query = `SELECT * FROM tasks WHERE assigned_to = $1 ORDER BY due_date ASC;`;
-  const result = await pool.query([userId]);
+  const query = `SELECT * FROM tasks WHERE user_id = $1;`;
+  const result = await pool.query(query, [userId]);
+  return result.rows;
+};
+
+const getTasksByProject = async (project) => {
+  const query = `SELECT * FROM tasks WHERE project = $1;`;
+  const result = await pool.query(query,[project]);
+
   return result.rows;
 };
 
@@ -48,6 +55,7 @@ module.exports = {
   addTask,
   getAllTasks,
   getTasksByUser,
+  getTasksByProject,
   updateTaskStatus,
   deleteTask,
 };

@@ -18,7 +18,7 @@ const addAttendance = async (userId, checkIn=new Date().toLocaleTimeString(), ch
 
 // ✅ Get Attendance by User
 const getAttendanceByUser = async (userId) => {
-  const query = `SELECT * FROM attendance WHERE user_id = $1 AND date = CURRENT_DATE ORDER BY date DESC;`;
+  const query = `SELECT * FROM attendance WHERE user_id = $1 ORDER BY date DESC;`;
   const result = await pool.query(query, [userId]);
 
   return result.rows;

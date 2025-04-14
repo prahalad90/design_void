@@ -29,7 +29,7 @@ const columns = [
     },
     {
         name: "Invoice Number",
-        selector: (row: any) => row.customer_id,
+        selector: (row: any) => row.invoice_number,
         sortable: true,
       },
 
@@ -43,7 +43,7 @@ const columns = [
     },
     {
       name: "Amount",
-      selector: (row: any) => row.amount,
+      selector: (row: any) => parseFloat(row.price) * parseFloat(row.quantity),
     },
   ];
 
