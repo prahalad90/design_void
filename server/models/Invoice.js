@@ -1,7 +1,17 @@
 const pool = require('../config/db');
 
 const getAllInvoice = async () => {
-    const query = 'SELECT * FROM invoices JOIN customers ON invoices.customer_id = customers.id';
+    const query = `SELECT 
+  invoices.invoice_number,
+  customers.name,
+  invoices.date,
+  SUM(invoices.price * invoices.quantity) AS total_amount,
+  COALESCE(SUM(accounts.amount_received), 0) AS amount_received
+FROM invoices
+JOIN customers ON invoices.customer_id = customers.id
+LEFT JOIN accounts ON invoices.invoice_number = accounts.invoice_number
+GROUP BY invoices.invoice_number, customers.name, invoices.date
+ORDER BY invoices.invoice_number DESC;`;
     const result = await pool.query(query);
     console.log(result.rows)
     return result.rows;

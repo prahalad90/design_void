@@ -50,10 +50,12 @@ router.post("/", async (req, res) => {
 
 router.put("/:id", async (req, res) => {
   try {
+    const taskID = req.params.id
     const { status } = req.body;
-    const updateTask = await updateTaskStatus(status);
+    const updateTask = await updateTaskStatus(taskID, status);
     if (!updateTask) return res.status(404).json({ error: "Task not found" });
     res.json(updateTask);
+    console.log(updateTask)
   } catch (err) {
     res.status(500).json({ error: "Server error" });
   }

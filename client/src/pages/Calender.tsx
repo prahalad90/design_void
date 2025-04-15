@@ -31,6 +31,8 @@ const Calendar: React.FC = () => {
     return (
         <>
             <div className='p-5'>
+                <h1 className='text-2xl'>Content Calendar</h1>
+                <hr />
                 <FullCalendar
                     plugins={[dayGridPlugin]}
                     initialView="dayGridMonth"

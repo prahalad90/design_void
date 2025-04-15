@@ -10,7 +10,7 @@ export default function Attendance() {
   const fetchAttendance = async () => {
     const userid = localStorage.getItem('id')
     try {
-      const response = await axios.get(`http://127.0.0.1:5000/api/attendance?id=${userid}`);
+      const response = await axios.get(`http://127.0.0.1:5000/api/attendance/${userid}`);
       const attData = response.data;
       console.log(attData)
       setAttData(attData);

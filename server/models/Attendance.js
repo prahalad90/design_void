@@ -24,6 +24,12 @@ const getAttendanceByUser = async (userId) => {
   return result.rows;
 };
 
+const getAttendanceAll = async () => {
+  const query = `SELECT * FROM attendance JOIN users ON attendance.user_id = users.id WHERE date = CURRENT_DATE ORDER BY date DESC;`;
+  const result = await pool.query(query);
+  return result.rows;
+};
+
 
 const checkUserAttendanceToday = async (userId) => {
 
@@ -89,4 +95,5 @@ module.exports = {
   getAttendanceByUser,
   updateAttendance,
   checkUserAttendanceToday,
+  getAttendanceAll,
 };

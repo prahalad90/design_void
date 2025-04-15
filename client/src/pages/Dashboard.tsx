@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import axios from "axios";
+import TodayAttendance from '../components/TodayAttendance'
 
 export default function Dashboard() {
     const [projectcount, setProjectcount] = useState(0)
@@ -56,46 +57,9 @@ export default function Dashboard() {
                 </div>
 
             </div>
-
-            <div className='w-2/3 bg-red-50 h-1/2 rounded-2xl p-5'>
-                <h3 className='text-2xl'>Employee Present</h3>
-                <hr className='my-2' />
-
-                <div className='grid grid-cols-3 gap-4'>
-                    {/* heading */}
-                    <h5 className='xl font-medium'>Employee</h5>
-                    <h5 className='xl font-medium'>Check In</h5>
-                    <h5 className='xl font-medium'>Check Out</h5>
-                    {/* heading */}
-                    <div className='flex gap-2'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                        </svg>
-                        <h5>Prahalad Kumhar</h5>
-                    </div>
-                    <p>09:10 am</p>
-                    <p>06:10 pm</p>
-
-                    <div className='flex gap-2'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                        </svg>
-                        <h5>Prahalad Kumhar</h5>
-                    </div>
-                    <p>09:10 am</p>
-                    <p>06:10 pm</p>
-
-                    <div className='flex gap-2'>
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" className="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z" />
-                        </svg>
-                        <h5>Prahalad Kumhar</h5>
-                    </div>
-                    <p>09:10 am</p>
-                    <p>06:10 pm</p>
-
-                </div>
-            </div>
+            
+            <TodayAttendance/>
+            
         </div>
     )
 }

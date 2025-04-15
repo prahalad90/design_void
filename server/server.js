@@ -23,6 +23,7 @@ const authRoutes = require("./routes/authRoutes");
 const attendanceRoutes = require("./routes/attendanceRoutes");
 const customerRoutes = require("./routes/customerRoutes");
 const invoiceRoutes = require("./routes/invoiceRoutes");
+const accountRoutes = require("./routes/accountRoutes");
 const bcrypt = require('bcryptjs');
 const pool = require("./config/db");
 const createTables = require("./config/init");
@@ -41,6 +42,7 @@ app.use("/auth", authRoutes);
 app.use("/api/attendance",attendanceRoutes);
 app.use("/api/customer", customerRoutes);
 app.use("/api/invoice", invoiceRoutes);
+app.use("/api/accountRoutes", accountRoutes);
 app.use('/uploads', express.static('uploads'));
 
 

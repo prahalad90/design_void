@@ -66,7 +66,15 @@ const createTables = async () => {
             total INTEGER,
             created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
-`
+
+        CREATE TABLE IF NOT EXISTS accounts (
+            id SERIAL PRIMARY KEY,
+            invoice_number VARCHAR(50),
+            amount_received INTEGER NOT NULL,
+            mode VARCHAR(50),
+            reference TEXT,
+            timestamp TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );`
         );
         console.log("Tables checked and created if needed.");
     } catch (err) {

@@ -43,7 +43,11 @@ const columns = [
     },
     {
       name: "Amount",
-      selector: (row: any) => parseFloat(row.price) * parseFloat(row.quantity),
+      selector: (row: any) => row.total_amount,
+    },
+    {
+      name: "Amount Received",
+      selector: (row: any) => row.amount_received,
     },
   ];
 

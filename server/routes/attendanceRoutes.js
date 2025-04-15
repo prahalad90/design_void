@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const multer = require("multer");
 const { getUserById, } = require("../models/User");
-const { addAttendance, getAttendanceByUser, checkUserAttendanceToday, updateAttendance } = require("../models/Attendance");
+const { addAttendance, getAttendanceByUser, checkUserAttendanceToday, updateAttendance, getAttendanceAll } = require("../models/Attendance");
 const sharp = require("sharp");
 const fs = require("fs");
 const path = require("path");
@@ -116,6 +116,29 @@ router.post("/", upload.single("image"), async (req, res) => {
     }
 });
 
+router.get("/", async (req, res) => {
+    try {
+      const data = await getAttendanceAll();
+      res.json(data);
+    } catch (err) {
+      res.status(500).json({ error: "Server error" });
+    }
+  });
+
+router.get('/:id', async (req, res) => {
+    console.log(req.params.id)
+    try {
+        const attdata = await getAttendanceByUser(req.params.id);
+        if (!attdata || attdata.length === 0) {
+            return res.status(404).json({ message: "No attendance records found" });
+        }
+        console.log(attdata)
+        res.json(attdata);
+    } catch (error) {
+        console.error("Error fetching attendance data:", error);
+        res.status(500).json({ message: "Internal server error" });
+    }
+});
 
 
 router.get('/', async (req, res) => {

@@ -13,7 +13,7 @@ const addTask = async (userid,project,title,description,duedate,status='Pending'
 };
 
 const getAllTasks = async () => {
-  const query = `SELECT * FROM tasks JOIN users ON tasks.user_id=users.id ORDER BY tasks.created_at DESC;`;
+  const query = `SELECT tasks.id AS task_id, project,  tasks.title,  tasks.description,  tasks.status,users.id AS user_id,  users.name AS user_name FROM tasks JOIN users ON tasks.user_id=users.id ORDER BY tasks.created_at DESC;`;
   const result = await pool.query(query);
   return result.rows;
 };
@@ -40,7 +40,8 @@ const updateTaskStatus = async (taskId, status) => {
     WHERE id = $2
     RETURNING *;
   `;
-  const result = await pool.query(query, [taskId, status]);
+  console.log( taskId, status)
+  const result = await pool.query(query, [status, taskId]);
   return result.rows[0];
 };
 

@@ -71,17 +71,21 @@ function Task() {
 
     const columns = [
         {
+            name: "ID",
+            selector: (row: any) => row.task_id,
+        },
+        {
             name: "Assign To",
-            selector: (row: any) => row.name,
+            selector: (row: any) => row.user_name,
             sortable: true,
         },
         {
             name: "Project",
             selector: (row: any) => (
                 <button onClick={() => navigate(`/calendar/${row.project}`)}>
-                  {row.project}
+                    {row.project}
                 </button>
-              ),    
+            ),
             sortable: true,
         },
         {
@@ -103,7 +107,14 @@ function Task() {
         },
         {
             name: "Status",
-            selector: (row: any) => row.status,
+            selector: (row: any) => (
+                <span
+                    className="text-blue-600 cursor-pointer"
+                    onClick={() => handleStatusClick(row)}
+                >
+                    {row.status}
+                </span>
+            ),
         },
     ];
     const customStyles = {
@@ -158,6 +169,17 @@ function Task() {
         fetchAssignby();
     }, [])
 
+    const [selectedRow, setSelectedRow] = useState(null);
+    const [showModal, setShowModal] = useState(false);
+    
+    const [status, setStatus] = useState("");
+
+    const handleStatusClick = (row: any) => {
+        setSelectedRow(row);
+        setStatus(row.status);
+        setShowModal(true);
+    };
+
 
     return (
         <>
@@ -200,7 +222,7 @@ function Task() {
             <div className="mt-5">
                 <h2 className="text-2xl">Task List</h2>
                 <hr className="mb-4" />
-                                
+
                 <DataTable
                     columns={columns}
                     data={task}
@@ -210,6 +232,68 @@ function Task() {
                     customStyles={customStyles}
                 />
             </div>
+            {
+                showModal && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+                        <div className="bg-white rounded-lg p-6 w-96">
+                            <h2 className="text-xl font-bold mb-4">Update Status</h2>
+
+                            <form onSubmit={(e) => {
+                                e.preventDefault();
+                                try {
+                                    const response = fetch(`http://127.0.0.1:5000/api/task/${selectedRow.task_id}`, {
+                                      method: "PUT",
+                                      headers: {
+                                        "Content-Type": "application/json",
+                                      },
+                                      body: JSON.stringify({ status }),
+                                    });
+                              
+                                    if (response.ok) {
+                                      alert("Status updated successfully");
+                                      setShowModal(false);
+                                      // Optionally reload or update your local data here
+                                    } else {
+                                      console.error("Failed to update status");
+                                    }
+                                  } catch (error) {
+                                    console.error("Error:", error);
+                                  }
+                                setShowModal(false);
+                            }}>
+                                <label className="block mb-2">
+                                    Status:
+                                    <select
+                                        value={status}
+                                        onChange={(e) => setStatus(e.target.value)}
+                                        className="w-full border border-gray-300 rounded px-2 py-1 mt-1"
+                                    >
+                                        <option value="Pending">Pending</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Completed">Completed</option>
+                                    </select>
+                                </label>
+
+                                <div className="flex justify-end mt-4 gap-2">
+                                    <button
+                                        type="button"
+                                        className="px-4 py-2 border rounded"
+                                        onClick={() => setShowModal(false)}
+                                    >
+                                        Cancel
+                                    </button>
+                                    <button
+                                        type="submit"
+                                        className="px-4 py-2 bg-blue-600 text-white rounded"
+                                    >
+                                        Save
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )
+            }
         </>
     );
 }
